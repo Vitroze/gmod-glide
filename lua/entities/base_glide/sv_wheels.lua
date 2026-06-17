@@ -10,8 +10,12 @@ function ENT:WheelInit()
     self.wheelParams = {}
 end
 
-function ENT:CreateWheel( offset, params )
+function ENT:CreateWheel( offset, params, indexWheel )
     params = params or {}
+
+    if indexWheel and IsValid( self.wheels[indexWheel] ) then
+        return self.wheels[indexWheel]
+    end
 
     local pos = self:LocalToWorld( offset )
     local ang = self:LocalToWorldAngles( Angle() )
@@ -28,12 +32,26 @@ function ENT:CreateWheel( offset, params )
 
     Glide.CopyEntityCreator( self, wheel )
 
-    local index = self.wheelCount + 1
+    local index = indexWheel or self.wheelCount + 1
 
     self.wheelCount = index
     self.wheels[index] = wheel
 
     return wheel
+end
+
+function ENT:RemoveWheelByIndex( id )
+    if not self.wheels then return end
+
+    local wheel = self.wheels[id]
+
+    if IsValid( wheel ) then
+        wheel:Remove()
+    end
+
+    self.wheels[id] = nil
+    self.wheelCount = self.wheelCount - 1
+    self.wheelDeleted = true
 end
 
 local EntityPairs = Glide.EntityPairs
