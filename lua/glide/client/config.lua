@@ -1193,19 +1193,31 @@ end
 hook.Add( "PlayerStartVoice", "Glide.PlayerStartVoice", function( ply )
     if ply == LocalPlayer() then return end
 
-    tPlayersTalking[ply] = true
+    print(ply:Nick() .. " started talking.")
+
+    tPlayersTalking[ply:SteamID()] = true
 
     AniamtionVoice( true )
 end )
 
-hook.Add( "PlayerEndVoice", "Glide.PlayerEndVoice", function( ply )
-    if ply == LocalPlayer() then return end
+local function EndVoice( sSteamID )
 
-    tPlayersTalking[ply] = nil
+    tPlayersTalking[sSteamID] = nil
 
     if table.Count( tPlayersTalking ) == 0 then
         AniamtionVoice( false )
     end
+end
+
+hook.Add( "PlayerEndVoice", "Glide.PlayerEndVoice", function( ply )
+    if ply == LocalPlayer() then return end
+
+    EndVoice( ply:SteamID() )
+end )
+
+gameevent.Listen( "player_disconnect" )
+hook.Add( "player_disconnect", "Glide.PlayerDisconnect", function( data )
+    EndVoice( data.networkid )
 end )
 
 -- Calculate the volume multiplier for a specific audio type,
