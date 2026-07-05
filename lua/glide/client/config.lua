@@ -1190,14 +1190,30 @@ local function AniamtionVoice( bSpeak )
     end )
 end
 
-hook.Add( "PlayerStartVoice", "Glide.PlayerStartVoice", function( ply )
-    if ply == LocalPlayer() then return end
+for sNameHook, fcHook in pairs( hook.GetTable()["PlayerStartVoice"] ) do
+    hook.Remove( "PlayerStartVoice", sNameHook )
+    hook.Add( "PlayerBeforeStartVoice", sNameHook, fcHook )
+end
 
-    print(ply:Nick() .. " started talking.")
+VitrozeFCHookAdd = VitrozeFCHookAdd or hook.Add
+function hook.Add( sHook, sName, fcFunc )
+    if sHook == "PlayerStartVoice" and sName ~= "Glide.ManageVoice" then
+        sHook = "PlayerBeforeStartVoice"
+    end
 
-    tPlayersTalking[ply:SteamID()] = true
+    VitrozeFCHookAdd( sHook, sName, fcFunc )
+end
 
-    AniamtionVoice( true )
+local voice_loop = GetConVar( "voice_loopback" )
+hook.Add( "PlayerStartVoice", "Glide.ManageVoice", function( ply, plyIndex )
+    if ply ~= LocalPlayer() or voice_loop:GetBool() then
+        tPlayersTalking[ply:SteamID()] = true
+
+        AniamtionVoice( true )
+    end
+
+    local bShowHUD = hook.Run( "PlayerBeforeStartVoice", ply, plyIndex )
+    return bShowHUD
 end )
 
 local function EndVoice( sSteamID )
