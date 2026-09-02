@@ -87,7 +87,7 @@ function ENT:Use( activator )
         return
     end
 
-    Glide.EnterVehicle( activator, freeSeat )
+    Glide.EnterVehicle( activator, self, freeSeat )
 end
 
 --- Override this base class function.

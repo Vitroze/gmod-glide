@@ -295,7 +295,7 @@ function ENT:Use( activator )
         local seat = self:GetFreeSeat()
 
         if seat then
-            Glide.EnterVehicle( activator, seat )
+            Glide.EnterVehicle( activator, self, seat )
             return
         end
     end
@@ -303,7 +303,7 @@ function ENT:Use( activator )
     local freeSeat = self:GetClosestAvailableSeat( activator:GetShootPos() )
 
     if freeSeat then
-        Glide.EnterVehicle( activator, freeSeat )
+        Glide.EnterVehicle( activator, self, freeSeat )
     end
 end
 
