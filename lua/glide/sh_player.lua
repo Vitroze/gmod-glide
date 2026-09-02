@@ -55,7 +55,7 @@ if SERVER then
         Glide._OriginalEyeAngles = Glide._OriginalEyeAngles or EntityMeta.EyeAngles
         local IsPlayer = PlayerMeta.IsPlayer
         function EntityMeta:EyeAngles()
-            if IsPlayer( self ) and self.GlideGetVehicle and IsValid( self:GlideGetVehicle() ) then
+            if IsPlayer( self ) and self.IsUsingGlideVehicle then
                 return self:GlideGetAimAngles()
             end
 
@@ -64,7 +64,7 @@ if SERVER then
 
         Glide._OriginalGetAimVector = Glide._OriginalGetAimVector or PlayerMeta.GetAimVector
         function PlayerMeta:GetAimVector()
-            if self.GlideGetVehicle and IsValid( self:GlideGetVehicle() ) then
+            if self.IsUsingGlideVehicle then
                 return self:GlideGetAimAngles():Forward()
             end
 
