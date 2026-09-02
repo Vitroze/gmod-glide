@@ -242,10 +242,7 @@ end
 
 local GetDevMode = Glide.GetDevMode
 hook.Add( "EntityFireBullets", "Glide.FixBulletDirection", function( ent, data )
-    if not IsValid( ent ) or not ent:IsPlayer() then return end
-
-    local vehicle = ent:GlideGetVehicle()
-    if not IsValid( vehicle ) then return end
+    if not IsValid( ent ) or not ent:IsPlayer() or not ent.IsUsingGlideVehicle then return end
 
     data.Dir = ent:GlideGetAimAngles():Forward()
     data.Src = ent:EyePos()
