@@ -52,9 +52,10 @@ if SERVER then
             return EnterVehicle( self, vehicle )
         end
 
-        Glide._OriginalEyeAngles = Glide._OriginalEyeAngles or PlayerMeta.EyeAngles
-        function PlayerMeta:EyeAngles()
-            if self.GlideGetVehicle and IsValid( self:GlideGetVehicle() ) then
+        Glide._OriginalEyeAngles = Glide._OriginalEyeAngles or EntityMeta.EyeAngles
+        local IsPlayer = PlayerMeta.IsPlayer
+        function EntityMeta:EyeAngles()
+            if IsPlayer( self ) and self.GlideGetVehicle and IsValid( self:GlideGetVehicle() ) then
                 return self:GlideGetAimAngles()
             end
 
