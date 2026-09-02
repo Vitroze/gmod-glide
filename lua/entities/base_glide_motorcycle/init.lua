@@ -76,7 +76,7 @@ function ENT:Use( activator )
     if not activator:IsPlayer() then return end
     if self:WaterLevel() > 2 then return end
 
-    local freeSeat = self:GetFreeSeat()
+    local freeSeat, seatID = self:GetFreeSeat()
     if not freeSeat then return end
 
     local WORLD_UP = Vector( 0, 0, 1 )
@@ -87,7 +87,7 @@ function ENT:Use( activator )
         return
     end
 
-    Glide.EnterVehicle( activator, self, freeSeat )
+    Glide.EnterVehicle( activator, self, freeSeat, seatID )
 end
 
 --- Override this base class function.

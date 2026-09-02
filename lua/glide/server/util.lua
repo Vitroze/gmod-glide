@@ -228,10 +228,10 @@ function Glide.CanEnterLockedVehicle( ply, vehicle )
 end
 
 local cvarAllowWeaponsInVehicle = GetConVar( "glide_allow_weapons_in_vehicle" )
-function Glide.EnterVehicle( ply, vehicle, seat )
+function Glide.EnterVehicle( ply, vehicle, seat, seatID )
     if not IsValid( vehicle ) or not IsValid( seat ) then return end
 
-    if vehicle.weaponCount > 0 then
+    if seatID == 1 and vehicle.weaponCount > 0 then
         ply:SetAllowWeaponsInVehicle( false )
     else
         ply:SetAllowWeaponsInVehicle( cvarAllowWeaponsInVehicle:GetBool() )
@@ -262,7 +262,7 @@ function Glide.SwitchSeat( ply, seatIndex )
     end
 
     ply:ExitVehicle()
-    Glide.EnterVehicle( ply, vehicle, seat )
+    Glide.EnterVehicle( ply, vehicle, seat, seatIndex )
 
     hook.Run( "Glide_PostSwitchSeat", ply, seatIndex )
 end

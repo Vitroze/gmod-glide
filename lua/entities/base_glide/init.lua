@@ -292,18 +292,18 @@ function ENT:Use( activator )
     if not activator:IsPlayer() then return end
 
     if not IsValid( self:GetDriver() ) and not activator:KeyDown( IN_WALK ) then
-        local seat = self:GetFreeSeat()
+        local seat, seatID = self:GetFreeSeat()
 
         if seat then
-            Glide.EnterVehicle( activator, self, seat )
+            Glide.EnterVehicle( activator, self, seat, seatID )
             return
         end
     end
 
-    local freeSeat = self:GetClosestAvailableSeat( activator:GetShootPos() )
+    local freeSeat, seatID = self:GetClosestAvailableSeat( activator:GetShootPos() )
 
     if freeSeat then
-        Glide.EnterVehicle( activator, self, freeSeat )
+        Glide.EnterVehicle( activator, self, freeSeat, seatID )
     end
 end
 
