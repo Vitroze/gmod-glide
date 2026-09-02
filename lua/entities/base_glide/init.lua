@@ -564,7 +564,7 @@ function ENT:GetClosestAvailableSeat( pos )
     local closestSeat, closestIndex = nil, nil
     local closestDistance = math.huge
 
-    for _, seat in EntityPairs( self.seats ) do
+    for i, seat in EntityPairs( self.seats ) do
         local distance = pos:DistToSqr( seat:GetPos() )
 
         if distance < closestDistance and not IsValid( seat:GetDriver() ) then
