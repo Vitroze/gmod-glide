@@ -144,7 +144,9 @@ debug.setValue = (id, value) => {
     Logic to handle each individual Engine Stream
 */
 
-let DEFAULT_STREAM_PARAMETERS = {};
+let DEFAULT_STREAM_PARAMETERS = {
+    fadeDist: 2500
+};
 
 class EngineStream {
     constructor(id, streamManager) {
@@ -196,13 +198,13 @@ class EngineStream {
 
         this.pannerNode = new PannerNode(context, {
             panningModel: "equalpower", //"HRTF",
-            distanceModel: "inverse",
+            distanceModel: "linear",
             positionX: this.position[0],
             positionY: this.position[1],
             positionZ: this.position[2],
-            refDistance: this.params.fadeDist * 0.1,
+            refDistance: this.params.fadeDist * 0.5,
             maxDistance: this.params.fadeDist,
-            rolloffFactor: 0.8
+            rolloffFactor: 1.0
         });
 
         this.pannerNode.channelCount = 1;
@@ -394,25 +396,12 @@ class EngineStream {
         const inputs = this.inputs;
         const params = this.params;
 
-        this.pannerNode.refDistance = params.fadeDist * 0.1;
-        this.pannerNode.maxDistance = params.fadeDist;
-
-        let attenuation = 1;
-        const listener = this.streamManager && this.streamManager.audioContext.listener;
-
-        if (listener) {
-            const position = this.position;
-            const dx = position[0] - listener.positionX.value;
-            const dy = position[1] - listener.positionY.value;
-            const dz = position[2] - listener.positionZ.value;
-            const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-            const range = params.fadeDist > 0 ? params.fadeDist : 2500;
-            const start = range * 0.5;
-            attenuation = 1 - clamp((distance - start) / (range - start), 0, 1);
+        if (params.fadeDist > 0) {
+            this.pannerNode.refDistance = params.fadeDist * 0.5;
+            this.pannerNode.maxDistance = params.fadeDist;
         }
 
-        let baseVol = params.volume * this.volumeMultiplier * attenuation;
+        let baseVol = params.volume * this.volumeMultiplier;
         let pitch = 1;
 
         // Gear switch "wobble"
